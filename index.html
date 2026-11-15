@@ -67,6 +67,41 @@ h1{font-size:26px;text-align:center;margin:14px 0 4px}
 .ok-t{color:#1a9a4b}.bad-t{color:#d33}
 #loading{position:fixed;inset:0;background:#f4f6fbee;display:flex;align-items:center;justify-content:center;font-size:18px;color:#557;z-index:9}
 .toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);background:#000c;color:#fff;padding:12px 18px;border-radius:12px;font-size:16px;z-index:20;display:none}
+
+.dtop{flex:none}
+.dmain{flex:1;display:flex;flex-direction:column;min-height:0}
+#pad .padfb{position:absolute;left:0;right:0;bottom:6px;pointer-events:none;text-align:center}
+#pad .padfb .fb{min-height:0}
+.btns #submit{flex:1.5}
+#rotTip{position:fixed;inset:0;background:#0007;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+#rotTip .box{background:#fff;border-radius:18px;padding:20px;text-align:center;max-width:420px}
+/* ===== 横屏（真实横屏或模拟横屏）===== */
+body.land .view{padding-top:calc(4px + env(safe-area-inset-top));padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+body.land #vDict{display:none}
+body.land #vDict.on{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr;gap:4px 8px}
+body.land #vDict .hdr{grid-column:1/3;min-height:38px}
+body.land #vDict .hdr button{min-height:34px}
+body.land #vDict .hdr .t{flex:none;text-align:left;font-size:14px}
+body.land #vDict .dtop{display:none}
+body.land #vDict .hdr .zhL{display:block}
+body.land #vDict .dmain{grid-column:1/3;flex-direction:row;gap:8px}
+body.land #pad{margin:0;min-height:0}
+body.land .btns{flex-direction:column;margin:0;width:104px;gap:6px}
+body.land .btns button{min-height:0;flex:1;font-size:17px}
+body.land .btns #submit{flex:1.6}
+body.land #rotBtn{display:none}
+body.land.sim #rotBtn{display:inline-block}
+.zhL{display:none;flex:1;text-align:center;font-size:24px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zhL small{font-size:15px;color:#c80;font-weight:400;margin-left:8px;letter-spacing:1px}
+body.land #vLearn .scroll{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-content:start}
+body.land #vLearn .lw{font-size:44px}
+body.land #vLearn .dots{grid-column:1/3}
+body.land #vLearn .row .big,body.land #vSum .row .big{min-height:50px}
+body.land .grid{grid-template-columns:repeat(7,1fr)}
+body.land h1{margin:6px 0 2px}
+/* 模拟横屏：把默写页旋转 90°（手机向左横放）*/
+body.sim #vDict.on{position:fixed;left:0;top:0;transform-origin:0 0;transform:translateX(100vw) rotate(90deg);max-width:none;margin:0;
+  padding:6px calc(8px + env(safe-area-inset-bottom)) 8px calc(8px + env(safe-area-inset-top))}
 </style>
 </head>
 <body>
@@ -110,20 +145,27 @@ h1{font-size:26px;text-align:center;margin:14px 0 4px}
 </div>
 <!-- 默写 -->
 <div class="view" id="vDict">
-  <div class="hdr"><button id="dictBack">‹ 首页</button><div class="t" id="dictTitle"></div><button id="dSay">🔊 听</button></div>
-  <div class="zh" id="dZh"></div>
-  <div class="hint" id="dHint"></div>
-  <div id="pad"><canvas id="bg"></canvas><canvas id="cv"></canvas><div class="ph" id="ph">在这里手写英文单词（字母之间稍微分开一点）</div><div id="reveal"><small>正确拼写</small><span id="revealW"></span></div></div>
-  <div class="fb" id="fb"></div>
-  <div class="read" id="read"></div>
-  <div class="btns">
-    <button id="undo">撤销</button>
-    <button id="clear">清除</button>
-    <button id="hintBtn">提示</button>
-    <button class="warn" id="skip" style="display:none">跳过</button>
-    <button class="pri" id="submit" style="flex:1.5">提交</button>
+  <div class="hdr"><button id="dictBack">‹ 首页</button><div class="t" id="dictTitle"></div><div class="zhL" id="dZhL"></div><button id="rotBtn">↻ 横屏书写</button><button id="dSay">🔊 听</button></div>
+  <div class="dtop"><div class="zh" id="dZh"></div><div class="hint" id="dHint"></div></div>
+  <div class="dmain">
+    <div id="pad"><canvas id="bg"></canvas><canvas id="cv"></canvas><div class="ph" id="ph">在这里手写英文单词（字母之间稍微分开一点）</div>
+      <div class="padfb"><div class="fb" id="fb"></div><div class="read" id="read"></div></div>
+      <div id="reveal"><small>正确拼写</small><span id="revealW"></span></div></div>
+    <div class="btns">
+      <button id="undo">撤销</button>
+      <button id="clear">清除</button>
+      <button id="hintBtn">提示</button>
+      <button class="warn" id="skip" style="display:none">跳过</button>
+      <button class="pri" id="submit">提交</button>
+    </div>
   </div>
 </div>
+<div id="rotTip"><div class="box">
+  <div style="font-size:54px">📱↻</div>
+  <div style="font-size:20px;font-weight:700;margin:8px 0">请把手机横过来</div>
+  <div style="font-size:15px;color:#667;line-height:1.6">如果横过来画面不转，请从右上角下拉打开「控制中心」，<br>关闭「竖排方向锁定」🔒 后再试。<br>也可以直接用下面的「模拟横屏」（手机向左横放）。</div>
+  <div class="row"><button id="rotSim" class="pri">模拟横屏</button><button id="rotClose">知道了</button></div>
+</div></div>
 <!-- 小结 -->
 <div class="view" id="vSum">
   <div class="scroll">
@@ -340,7 +382,21 @@ try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
 function toast(t,ms){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',ms||1500);}
 // ---------- 视图 ----------
-function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));}
+let sim=false,curView='';
+function show(id){curView=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));updLand();}
+// 横屏：真实横屏，或在默写页使用“模拟横屏”（CSS 旋转 90°）
+function updLand(){
+  const real=window.innerWidth>window.innerHeight;
+  if(real&&sim)sim=false;
+  if(real){const t=document.getElementById('rotTip');if(t)t.style.display='none';}
+  const useSim=sim&&curView==='vDict';
+  document.body.classList.toggle('sim',useSim);
+  document.body.classList.toggle('land',real||useSim);
+  const v=document.getElementById('vDict');
+  if(useSim){v.style.width=window.innerHeight+'px';v.style.height=window.innerWidth+'px';}else{v.style.width='';v.style.height='';}
+  const rb=document.getElementById('rotBtn');if(rb)rb.textContent=useSim?'↺ 退出模拟':'↻ 横屏书写';
+  if(curView==='vDict'&&typeof resize==='function')requestAnimationFrame(resize);
+}
 // ---------- 发音：有道词典真人发音（国内可用），失败时用浏览器语音合成 ----------
 const au=new Audio();au.preload='auto';
 function pickVoice(){const vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
@@ -395,18 +451,27 @@ $('learnBack').onclick=goHome;
 // ---------- 默写 ----------
 const pad=$('pad'),cv=$('cv'),bg=$('bg'),ctx=cv.getContext('2d');
 let strokes=[],cur=null,hintN=0,busy=false,wrongThis=0;
-function resize(){const r=pad.getBoundingClientRect();if(!r.width)return;const d=window.devicePixelRatio||1;
-  for(const c of [cv,bg]){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d);c.getContext('2d').setTransform(d,0,0,d,0,0);}
-  drawBg(r.width,r.height);redraw();}
+let padW=0,padH=0;
+function resize(){const W=pad.clientWidth,H=pad.clientHeight;if(!W||!H)return;const d=window.devicePixelRatio||1;
+  // 尺寸变化（如转屏）时按比例缩放已写的笔画，保证不丢失
+  if(padW&&padH&&(W!==padW||H!==padH)&&strokes.length){
+    const f=strokes.flat(),x0=Math.min(...f.map(q=>q[0])),x1=Math.max(...f.map(q=>q[0])),y0=Math.min(...f.map(q=>q[1])),y1=Math.max(...f.map(q=>q[1]));
+    const k=Math.min(1,W*0.9/Math.max(x1-x0,1),H*0.8/Math.max(y1-y0,1)),cx=(x0+x1)/2,cy=(y0+y1)/2; // 尽量保持原大小，放不下才缩小，并居中
+    for(const s of strokes)for(const p of s){p[0]=(p[0]-cx)*k+W/2;p[1]=(p[1]-cy)*k+H/2;}}
+  padW=W;padH=H;
+  for(const c of [cv,bg]){c.width=Math.round(W*d);c.height=Math.round(H*d);c.getContext('2d').setTransform(d,0,0,d,0,0);}
+  drawBg(W,H);redraw();}
 function drawBg(w,h){const g=bg.getContext('2d');g.clearRect(0,0,w,h);
   const lh=Math.min(h*0.55,w*0.3),top=(h-lh)/2;g.lineWidth=1;
   [[0,'#e3e8f2'],[1/3,'#eef1f7'],[2/3,'#f3c4c4'],[1,'#e3e8f2']].forEach(([f,c])=>{g.strokeStyle=c;g.beginPath();g.moveTo(10,top+f*lh);g.lineTo(w-10,top+f*lh);g.stroke();});}
-function redraw(){const r=pad.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);
+function redraw(){const r={width:pad.clientWidth,height:pad.clientHeight};ctx.clearRect(0,0,r.width,r.height);
   ctx.strokeStyle='#1d3c8f';ctx.fillStyle='#1d3c8f';ctx.lineWidth=Math.max(4,Math.min(7,r.height/45));ctx.lineCap='round';ctx.lineJoin='round';
   for(const s of strokes){if(s.length===1){ctx.beginPath();ctx.arc(s[0][0],s[0][1],ctx.lineWidth/2,0,7);ctx.fill();continue;}
     ctx.beginPath();ctx.moveTo(s[0][0],s[0][1]);for(let i=1;i<s.length;i++)ctx.lineTo(s[i][0],s[i][1]);ctx.stroke();}
   $('ph').style.display=strokes.length?'none':'block';}
-function pos(e){const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];}
+function pos(e){const r=cv.getBoundingClientRect();
+  if(document.body.classList.contains('sim'))return[e.clientY-r.top,r.right-e.clientX]; // 旋转 90° 后的坐标换算
+  return[e.clientX-r.left,e.clientY-r.top];}
 cv.addEventListener('pointerdown',e=>{e.preventDefault();if(busy)return;cv.setPointerCapture&&cv.setPointerCapture(e.pointerId);cur=[pos(e)];strokes.push(cur);clearFb();redraw();});
 cv.addEventListener('pointermove',e=>{if(!cur)return;e.preventDefault();const evs=e.getCoalescedEvents?e.getCoalescedEvents():[];for(const ev of (evs.length?evs:[e]))cur.push(pos(ev));redraw();});
 cv.addEventListener('pointerup',()=>cur=null);cv.addEventListener('pointercancel',()=>cur=null);
@@ -417,7 +482,7 @@ function clearFb(){$('fb').textContent='';$('fb').className='fb';}
 function dictShow(){
   show('vDict');const w=S.words[S.i];strokes=[];hintN=0;busy=false;wrongThis=0;
   $('dictTitle').textContent=title()+' · 默写 '+(S.i+1)+'/'+S.words.length;
-  $('dZh').textContent=w.zh;$('dHint').textContent='';$('skip').style.display='none';$('reveal').style.display='none';
+  $('dZh').textContent=w.zh;$('dHint').textContent='';setZhL();$('skip').style.display='none';$('reveal').style.display='none';
   clearFb();$('read').textContent='';requestAnimationFrame(resize);}
 function markWrong(w){const r=S.res[w.w]=S.res[w.w]||{};if(r.wrong)return;r.wrong=true;
   const m=st.mist[w.w]=st.mist[w.w]||{n:0,streak:0,t:Date.now()};m.n++;m.streak=0;save();}
@@ -428,7 +493,7 @@ function next(){if(S.i<S.words.length-1){S.i++;dictShow();}else finishSession();
 $('dSay').onclick=()=>say(S.words[S.i].w,true);
 $('undo').onclick=()=>{if(busy)return;strokes.pop();clearFb();redraw();};
 $('clear').onclick=()=>{if(busy)return;strokes=[];clearFb();$('read').textContent='';redraw();};
-$('hintBtn').onclick=()=>{const w=S.words[S.i].w;if(hintN<w.length-1)hintN++;$('dHint').textContent='提示：'+w.slice(0,hintN)+'…';};
+$('hintBtn').onclick=()=>{const w=S.words[S.i].w;if(hintN<w.length-1)hintN++;$('dHint').textContent='提示：'+w.slice(0,hintN)+'…';setZhL();};
 $('skip').onclick=()=>{if(busy)return;busy=true;const w=S.words[S.i];markWrong(w);S.res[w.w].skip=true;
   $('revealW').textContent=w.w;$('reveal').style.display='flex';say(w.w,true);setTimeout(next,2200);};
 $('submit').onclick=()=>{
@@ -476,9 +541,20 @@ function goHome(){
 $('groupGrid').onclick=e=>{const b=e.target.closest('button');if(b){st.cur=+b.dataset.g;save();startGroup(st.cur);}};
 $('btnContinue').onclick=()=>startGroup(st.cur);
 $('btnMistakes').onclick=mistShow;
-window.addEventListener('resize',()=>{if($('vDict').classList.contains('on'))resize();});
+function setZhL(){$('dZhL').innerHTML='';$('dZhL').append($('dZh').textContent);if($('dHint').textContent){const sm=document.createElement('small');sm.textContent=$('dHint').textContent;$('dZhL').append(sm);}}
+let rzT;const onRz=()=>{clearTimeout(rzT);rzT=setTimeout(updLand,60);};
+window.addEventListener('resize',onRz);window.addEventListener('orientationchange',()=>setTimeout(updLand,250));
+$('rotBtn').onclick=async()=>{
+  if(sim){sim=false;updLand();return;}
+  let ok=false;
+  try{if(screen.orientation&&screen.orientation.lock){
+      if(document.documentElement.requestFullscreen&&!document.fullscreenElement){try{await document.documentElement.requestFullscreen();}catch(e){}}
+      await screen.orientation.lock('landscape');ok=true;}}catch(e){ok=false;}
+  if(!ok)$('rotTip').style.display='flex';};
+$('rotClose').onclick=()=>{$('rotTip').style.display='none';};
+$('rotSim').onclick=()=>{$('rotTip').style.display='none';sim=true;updLand();};
 HW.loadModel('').then(()=>{$('loading').style.display='none';goHome();}).catch(e=>{$('loading').textContent='加载失败，请刷新重试';});
-window.__app={state:()=>st,session:()=>S,setStrokes:s=>{strokes=s;redraw();},say};
+window.__app={strokes:()=>strokes,state:()=>st,session:()=>S,setStrokes:s=>{strokes=s;redraw();},say};
 })();
 
 </script>
